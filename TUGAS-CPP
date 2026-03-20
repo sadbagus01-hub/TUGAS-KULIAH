@@ -1,0 +1,139 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+    Node* prev;
+};
+
+Node *head = NULL;
+Node *tail = NULL;
+
+void insertFirst(int value) {
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->next = head;
+    newNode->prev = NULL;
+    if (head != NULL) head->prev = newNode;
+    else tail = newNode;
+    head = newNode;
+    cout << "Berhasil menambahkan " << value << " di awal." << endl;
+}
+
+void insertLast(int value) {
+    if (head == NULL) {
+        insertFirst(value);
+        return;
+    }
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->next = NULL;
+    newNode->prev = tail;
+    tail->next = newNode;
+    tail = newNode;
+    cout << "Berhasil menambahkan " << value << " di akhir." << endl;
+}
+
+void inserstNext(int target, int value) {
+    Node* temp = head;
+    while (temp != NULL && temp->data != target) temp = temp->next;
+
+    if (temp == NULL) {
+        cout << "Data target " << target << " tidak ditemukan!" << endl;
+        return;
+    }
+    Node* newNode = new Node();
+    newNode->data = value;
+    newNode->next = temp->next;
+    newNode->prev = temp;
+    if (temp->next != NULL) temp->next->prev = newNode;
+    else tail = newNode;
+    temp->next = newNode;
+    cout << "Berhasil menambahkan " << value << " setelah " << target << "." << endl;
+}
+
+void deleteFirst() {
+    if (head == NULL) {
+        cout << "List kosong!" << endl;
+        return;
+    }
+    Node* temp = head;
+    head = head->next;
+    if (head != NULL) head->prev = NULL;
+    else tail = NULL;
+    delete temp;
+    cout << "Node pertama dihapus." << endl;
+}
+
+void deleteLast() {
+    if (tail == NULL) {
+        cout << "List kosong!" << endl;
+        return;
+    }
+    Node* temp = tail;
+    tail = tail->prev;
+    if (tail != NULL) tail->next = NULL;
+    else head = NULL;
+    delete temp;
+    cout << "Node terakhir dihapus." << endl;
+}
+
+void display() {
+    Node* temp = head;
+    if (temp == NULL) {
+        cout << "List Kosong.";
+    } else {
+        while (temp != NULL) {
+            cout << temp->data << (temp->next ? " <-> " : "");
+            temp = temp->next;
+        }
+    }
+    cout << endl;
+}
+
+int main() {
+    int pilihan, val, target;
+
+    do {
+        cout << endl;
+        cout << "<=== DOUBLE LINKED LIST ===>" << endl;
+        cout << "1. Insert First        2. Insert Last" << endl;
+        cout << "3. Insert Next         4. Delete First" << endl;
+        cout << "5. Delete Last         6. Tampilkan List" << endl;
+        cout << "0. Keluar" << endl;
+        cout << "Pilih menu: "; cin >> pilihan;
+
+        switch (pilihan) {
+            case 1:
+                cout << "Masukkan Value: "; cin >> val;
+                insertFirst(val);
+                break;
+            case 2:
+                cout << "Masukkan Value: "; cin >> val;
+                insertLast(val);
+                break;
+            case 3:
+                cout << "Cari angka berapa: "; cin >> target;
+                cout << "Masukkan Value baru: "; cin >> val;
+                inserstNext(target, val);
+                break;
+            case 4:
+                deleteFirst();
+                break;
+            case 5:
+                deleteLast();
+                break;
+            case 6:
+                display();
+                break;
+            case 0:
+                cout << "Program selesai." << endl;
+                break;
+            default:
+                cout << "Pilihan tidak valid!" << endl;
+        }
+    } while (pilihan != 0);
+
+    return 0;
+}
